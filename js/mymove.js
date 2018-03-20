@@ -1,36 +1,50 @@
 $(function() {
-    var $win = $(window),
-    $win_width = $win.width();
+    // サイドメニューのデフォルトの高さを取得（ロード時に確定）
+    var navPosY = $('#navbar-sidemenu').offset().top;
 
-    // PC閲覧時には、スクロールに合わせてサイドメニューを固定化する
-    if($win_width > 768){
-        var $sidenav = $('#navbar-sidemenu'),
-        navHeight = $sidenav.outerHeight(),
-        navWidth = $sidenav.outerWidth(),
-        navPosY = $sidenav.offset().top,
-        navPosX = $sidenav.offset().left,
-        fixedClass = 'is-fixed';
-  
-        $win.on('load scroll', function() {
-        var value = $(this).scrollTop();
-        if (value > navPosY ) {
-            $sidenav.css({
-                'position': 'fixed',
-                'left'    : navPosX,
-                'top'     : 0,
-                'width'   : navWidth,
-            });
-        } else {
-            $sidenav.css({
-                'position': '',
-                'left'    : '',
-                'top'     : '',
-                'width'   : '',
-            });
+    $(window).on('load resize', function(){
+        var $win = $(window);
+        var $win_width = $win.width();
+        var $sidenav = $('#navbar-sidemenu');
+        var $contents = $('#contents')
+
+        moveMenu($win, $win_width, $sidenav, $contents);
+    });
+
+
+    function moveMenu($win, $win_width, $sidenav, $contents){
+        // PC閲覧時には、スクロールに合わせてサイドメニューを固定化する
+        if($win_width > 768){
+            var navHeight = $sidenav.outerHeight(),
+                navWidth = $sidenav.outerWidth(),
+                navPosX = $contents.offset().left + $contents.width() + 30,
+                fixedClass = 'is-fixed';
+        
+            $win.on('load scroll', function() {
+                var value = $(this).scrollTop();
+                if (value > navPosY ) {
+                    $sidenav.css({
+                        'position': 'fixed',
+                        'left'    : navPosX,
+                        'top'     : 0,
+                        'width'   : navWidth,
+                    });
+                } else {
+                    $sidenav.css({
+                        'position': '',
+                        'left'    : '',
+                        'top'     : '',
+                        'width'   : '',
+                    });
+                }
+            })
         }
-        })
+
     }
+
   });
+
+
 
 $(function() {
   // スクロールのオフセット値
